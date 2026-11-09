@@ -9,7 +9,7 @@
 const params = new URLSearchParams(window.location.search);
 const roundId = params.get('round');
 const secret = params.get('t');
-const apiBase = (params.get('api') || 'https://proof-seal.somarc.workers.dev').replace(/\/+$/, '');
+const apiBase = (params.get('api') || 'https://proof-seal.mc-hess.workers.dev').replace(/\/+$/, '');
 
 const DECISIONS = [
   { id: 'approved', label: 'Approve', className: 'sr-approve' },

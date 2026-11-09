@@ -13,7 +13,7 @@
 // eslint-disable-next-line import/no-unresolved -- remote ES module served by da.live
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 
-const DEFAULT_API = 'https://proof-seal.somarc.workers.dev';
+const DEFAULT_API = 'https://proof-seal.mc-hess.workers.dev';
 const ADMIN = 'https://admin.hlx.page';
 const POLL_MS = 8000;
 const LIVE_STATES = ['in-review', 'approved'];
