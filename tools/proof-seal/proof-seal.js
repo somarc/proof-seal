@@ -282,6 +282,10 @@ function chip(stateId) {
   return h('span', { className: `ps-chip ps-tone-${def.tone}` }, def.label);
 }
 
+function healthChip(ok) {
+  return h('span', { className: `ps-chip ps-tone-${ok ? 'ok' : 'warn'}` }, ok ? 'Ready' : 'Needs setup');
+}
+
 function sealCard() {
   const { seal } = state;
   const [round] = state.rounds;
@@ -421,7 +425,7 @@ function setupCheck() {
   return h(
     'details',
     { className: 'ps-card', open: state.health && !ok },
-    h('summary', { className: 'ps-heading' }, 'Setup check ', state.health ? chip(ok ? 'published' : 'broken') : null),
+    h('summary', { className: 'ps-heading' }, 'Setup check ', state.health ? healthChip(ok) : null),
     h('ul', { className: 'ps-list ps-checks' }, checks.map((check) => h(
       'li',
       { className: check.ok ? 'ps-ok' : 'ps-fail' },
@@ -436,7 +440,7 @@ function setupCheck() {
 function render() {
   const main = document.querySelector('main.ps');
   if (!state.context) return;
-  main.replaceChildren(
+  main.replaceChildren(...[
     h(
       'header',
       { className: 'ps-header' },
@@ -449,7 +453,7 @@ function render() {
     feedbackList(),
     activity(),
     setupCheck(),
-  );
+  ].filter(Boolean));
 }
 
 /* ---------- boot ---------- */

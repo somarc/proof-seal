@@ -101,7 +101,7 @@ function render() {
   const round = view.data?.round;
   const seal = view.data?.seal;
   const feedback = view.data?.feedback || [];
-  main.replaceChildren(
+  main.replaceChildren(...[
     h(
       'header',
       { className: 'ps-header' },
@@ -159,7 +159,7 @@ function render() {
         h('p', {}, item.body),
       ))),
     ) : null,
-  );
+  ].filter(Boolean));
 }
 
 (async function init() {
