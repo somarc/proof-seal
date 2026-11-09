@@ -12,6 +12,20 @@ import {
   buildBlock,
 } from './aem.js';
 
+/* Authoring signal: decided at module evaluation, before any decoration. */
+const params = new URLSearchParams(window.location.search);
+const QUICK_EDIT = params.has('quick-edit');
+if (QUICK_EDIT) document.documentElement.setAttribute('quick-edit', '');
+
+/**
+ * True inside Experience Workspace Canvas / quick-edit.
+ * Gate interaction with it, never content.
+ * @returns {boolean}
+ */
+export function isAuthoring() {
+  return document.documentElement.hasAttribute('quick-edit');
+}
+
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
   const innerTT = window.trustedTypes.createPolicy('tt-inner', {
     createHTML: (s) => s, // avoid stack overflow
@@ -146,7 +160,6 @@ function decorateButtons(main) {
  * Decorates the main element.
  * @param {Element} main The main element
  */
-// eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
@@ -160,12 +173,12 @@ export function decorateMain(main) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.documentElement.lang = 'en';
+  doc.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
-    document.body.classList.add('appear');
+    doc.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
@@ -184,16 +197,19 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
-  loadHeader(doc.querySelector('body > header'));
+  /* Chrome tolerates a body replaced mid-load (Canvas swaps the body on edit). */
+  const header = doc.querySelector('body > header');
+  if (header) loadHeader(header);
 
   const main = doc.querySelector('main');
-  await loadSections(main);
+  if (main) await loadSections(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadFooter(doc.querySelector('body > footer'));
+  const footer = doc.querySelector('body > footer');
+  if (footer) loadFooter(footer);
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
@@ -204,14 +220,36 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  import('./consent-check.js');
+  /* Consent and other overlays never run inside Canvas. */
+  if (!isAuthoring()) import('./consent-check.js');
   // load anything that can be postponed to the latest here
 }
 
-async function loadPage() {
-  await loadEager(document);
-  await loadLazy(document);
+/**
+ * One fully awaited path: Canvas calls it again after each body replacement.
+ * @param {Document} doc
+ */
+export async function loadPage(doc = document) {
+  await loadEager(doc);
+  await loadLazy(doc);
   loadDelayed();
+}
+
+/* Load quick-edit ourselves, so preview.da.live serves this file unchanged. */
+if (QUICK_EDIT) {
+  let payload = {};
+  try {
+    const q = params.get('quick-edit');
+    payload = q && q !== 'on' ? JSON.parse(decodeURIComponent(q)) : {};
+  } catch { /* plain flag */ }
+  try {
+    // eslint-disable-next-line import/no-unresolved
+    const { default: loadQuickEdit } = await import('https://da.live/nx/public/plugins/quick-edit/quick-edit.js');
+    await loadQuickEdit(payload, loadPage);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('quick-edit unavailable outside Canvas', error);
+  }
 }
 
 loadPage();

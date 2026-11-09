@@ -1,0 +1,42 @@
+/* Sandbox reviewer: a stand-in proofing tool for demos and tests. */
+.sr {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  min-block-size: 100vh;
+}
+
+.sr-side {
+  align-content: start;
+  border-inline-end: 1px solid var(--ps-line);
+}
+
+.sr-stage { background: #ddd; }
+
+.sr-frame {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 100vh;
+  border: 0;
+  background: #fff;
+}
+
+.sr-decisions { display: grid; gap: var(--ps-space-2); }
+.sr-decisions .ps-button { inline-size: 100%; }
+
+.sr-approve {
+  border-color: var(--ps-ok-fg);
+  background: var(--ps-ok-fg);
+  color: #fff;
+}
+
+.sr-changes {
+  border-color: var(--ps-warn-fg);
+  color: var(--ps-warn-fg);
+}
+
+@media (width < 760px) {
+  .sr { grid-template-columns: 1fr; }
+  .sr-side { border-inline-end: 0; border-block-end: 1px solid var(--ps-line); }
+  .sr-frame { min-block-size: 70vh; }
+}
