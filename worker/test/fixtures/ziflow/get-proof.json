@@ -1,0 +1,10 @@
+{
+  "id": "zf-proof-1",
+  "public_link": "https://app.ziflow.com/proof/zf-proof-1",
+  "decision": "Approved",
+  "updated_at": "2026-11-09T11:00:00Z",
+  "reviewers": [
+    { "name": "Rita Reviewer", "email": "rita@example.com", "decision": "Approved", "decision_date": "2026-11-09T11:00:00Z", "is_guest": true },
+    { "name": "Paul Pending", "email": "paul@example.com", "decision": null, "decision_date": null, "is_guest": false }
+  ]
+}

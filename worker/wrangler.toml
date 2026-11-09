@@ -1,0 +1,22 @@
+name = "proof-seal"
+main = "src/index.js"
+compatibility_date = "2025-11-01"
+
+# Seals, rounds, sandbox rounds and the audit log.
+# Create with `npx wrangler kv namespace create APS_STORE` and paste the id here.
+[[kv_namespaces]]
+binding = "APS_STORE"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+PROOF_PROVIDER = "sandbox"
+# ALLOWED_ORIGINS = "https://*.aem.live,https://*.aem.page,https://*.preview.da.live,https://da.live,http://localhost:3000"
+# SANDBOX_REVIEWER_URL = "https://main--proof-seal--somarc.aem.live/tools/proof-seal/sandbox-reviewer.html"
+# SITE_PROVIDERS = '{"somarc/proof-seal":"ziflow"}'
+# SITE_POLICIES = '{"somarc/proof-seal":{"autoPublish":true,"minorChangesAllowed":false}}'
+
+# Secrets (never in this file): `npx wrangler secret put <NAME>`
+#   SITE_KEYS              JSON {"org/site": "<admin API key with role publish>"}
+#   ZIFLOW_API_KEY         Ziflow API key
+#   ZIFLOW_WEBHOOK_SECRET  Ziflow webhook signature key
+#   ZIFLOW_WEBHOOK_URL     optional: the exact URL registered in Ziflow, if it differs from the request URL

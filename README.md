@@ -82,7 +82,8 @@ Load the panel from your machine by opening the page in Experience Workspace wit
 ## Limitations
 
 - Previews must be publicly reachable for the fingerprint check and live-URL proofs. Protected previews need preview credentials (not yet supported).
-- Between the final fingerprint check and the publish call, an author could still re-preview. The window is short, and the backend checks again after publishing and records any mismatch.
+- Between the final fingerprint check and the publish call, an author could still re-preview. The window is a few hundred milliseconds; closing it fully needs an atomic "publish if unchanged" in the admin API.
+- The backend store is Cloudflare KV, which is eventually consistent. Two simultaneous deliveries of the same webhook could publish the same approved content twice (harmless, but logged twice).
 
 ## License
 

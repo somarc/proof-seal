@@ -1,0 +1,13 @@
+{
+  "name": "proof-seal-worker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Proof Seal for Experience Workspace (APS) backend: Cloudflare Worker + runtime-agnostic core",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test",
+    "dev": "npx wrangler dev",
+    "deploy": "npx wrangler deploy"
+  },
+  "license": "Apache-2.0"
+}

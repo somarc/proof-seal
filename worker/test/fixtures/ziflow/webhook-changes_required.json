@@ -1,0 +1,12 @@
+{
+  "events": [
+    {
+      "id": "evt-changes_required-1",
+      "event_type": "proof_decision_made",
+      "created_at": "2026-11-09T11:00:00Z",
+      "proof": { "id": "zf-proof-1", "name": "proof-seal/en/launch (round 1)" },
+      "decision": "Changes required",
+      "user": { "name": "Rita Reviewer", "email": "rita@example.com" }
+    }
+  ]
+}

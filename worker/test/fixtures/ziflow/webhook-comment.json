@@ -1,0 +1,11 @@
+{
+  "events": [
+    {
+      "id": "evt-comment-1",
+      "event_type": "comment_added",
+      "created_at": "2026-11-09T10:30:00Z",
+      "proof": { "id": "zf-proof-1" },
+      "user": { "name": "Rita Reviewer", "email": "rita@example.com" }
+    }
+  ]
+}

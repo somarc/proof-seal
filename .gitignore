@@ -11,3 +11,6 @@ helix-importer-ui
 # Ensure these files are tracked
 !CLAUDE.md
 !AGENTS.md
+
+# local deploy overrides (account-specific ids)
+worker/wrangler.local.toml
