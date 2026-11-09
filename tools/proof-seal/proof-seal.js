@@ -16,6 +16,7 @@ import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 const DEFAULT_API = 'https://proof-seal.mc-hess.workers.dev';
 const ADMIN = 'https://admin.hlx.page';
 const POLL_MS = 8000;
+const CHAT_MOUNT_MS = 1500;
 const LIVE_STATES = ['in-review', 'approved'];
 const SEALED_STATES = ['in-review', 'approved', 'published'];
 
@@ -268,11 +269,12 @@ function fixWithAssistant(item) {
       }
     });
   } catch { /* older host without chat-turn events: skip the comparison */ }
-  actions.setPrompt(
-    `Proof Seal feedback from ${who} (round ${round}): "${item.body}".${quote} `
-      + 'Apply exactly this change to the page and keep everything else unchanged.',
-    { autoSend: true },
-  );
+  const prompt = `Proof Seal feedback from ${who} (round ${round}): "${item.body}".${quote} `
+    + 'Apply exactly this change to the page and keep everything else unchanged.';
+  // Opening the chat and sending in one message sends an empty prompt when the chat
+  // panel is not mounted yet. Prefill first (this opens the chat), then send.
+  actions.setPrompt(prompt, { autoSend: false });
+  setTimeout(() => actions.setPrompt(prompt, { autoSend: true }), CHAT_MOUNT_MS);
 }
 
 /* ---------- view ---------- */
@@ -316,8 +318,10 @@ function sealCard() {
       h('dd', {}, round?.provider || '—'),
       h('dt', {}, 'Sent by'),
       h('dd', {}, seal.createdBy?.name || seal.createdBy?.email || '—'),
-      h('dt', {}, 'Sent'),
-      h('dd', {}, formatTime(seal.createdAt)),
+      h('dt', {}, round ? `Round ${round.number} sent` : 'Sent'),
+      h('dd', {}, formatTime(round?.createdAt || seal.createdAt)),
+      seal.publishedAt ? h('dt', {}, 'Published') : null,
+      seal.publishedAt ? h('dd', {}, formatTime(seal.publishedAt)) : null,
     ),
     round?.reviewerUrl ? h('a', {
       className: 'ps-link', href: round.reviewerUrl, target: '_blank', rel: 'noopener',
